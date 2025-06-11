@@ -1,103 +1,142 @@
-import Image from "next/image";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 
-export default function Home() {
+import { createClient } from "@/utils/supabase/server";
+import { SceneLayout } from "@/components/layout/scene-layout";
+import { Title } from "@/components/layout/title";
+import { Button } from "@/components/ui/button";
+
+import { format, isToday, isYesterday, differenceInDays } from "date-fns";
+
+function NoRecordings() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      <Title />
+      <Link href="/new">
+        <Button className="text-2xl font-serif">
+          <div className="flex flex-row gap-2 items-center">
+            <span>New Recording</span>
+            <span className="pt-1">⭢</span>
+          </div>
+        </Button>
+      </Link>
+    </>
+  );
+}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+type RecordingType = {
+  id: string;
+  name: string;
+  summary?: string;
+  emotion_tags?: string[];
+  date: string;
+  processing?: boolean;
+  raw_transcription?: string;
+};
+
+function Recording({ recording }: { recording: RecordingType }) {
+  const tag = `REM-${recording.id.slice(0, 6).toUpperCase()}`;
+  const dateObj = new Date(recording.date);
+  const exactDate = format(dateObj, "PPPP");
+  let dateLabel = "";
+  if (isToday(dateObj)) {
+    dateLabel = "Today";
+  } else if (isYesterday(dateObj)) {
+    dateLabel = "Yesterday";
+  } else {
+    const daysAgo = differenceInDays(new Date(), dateObj);
+    if (daysAgo < 7) {
+      dateLabel = `${daysAgo} days ago`;
+    } else {
+      dateLabel = exactDate;
+    }
+  }
+
+  return (
+    <div className="w-full max-w-[400px] aspect-[9/10]">
+      <div className="rounded-md red-card-bg px-4 md:px-4 py-4 flex flex-col items-center justify-center cursor-pointer w-full h-full text-background transition-transform duration-200 hover:-rotate-2">
+        <div className="rounded-md bg-[#DA4547] flex flex-col items-center justify-evenly w-full mb-2 shadow-xs flex-1">
+          <div className="w-0 h-0 border-l-[24px] border-r-[24px] border-b-[16px] border-l-transparent border-r-transparent border-b-background mx-auto" />
+          <div className="flex flex-col items-center justify-center">
+            <div className="font-mono text-lg tracking-widest text-center mb-2 font-mono-accent">
+              REM MEMORY CARD
+            </div>
+            <div className="font-mono text-lg text-center font-mono-accent">
+              8 MB
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="font-mono text-md w-full break-words truncate block">
+          {recording.name || tag}
+        </div>
+        <div className="flex flex-row gap-2 justify-between w-full items-center mt-2">
+          <div className="font-mono text-sm text-muted-foreground">
+            {recording.processing ? (
+              <span className="shimmer shimmer-background">Processing...</span>
+            ) : null}
+          </div>
+          <div
+            className="font-mono text-xs text-right ml-auto"
+            title={exactDate}
+          >
+            {dateLabel}
+          </div>
+        </div>
+      </div>
     </div>
   );
+}
+
+function Recordings({ recordings }: { recordings: RecordingType[] }) {
+  return (
+    <div className="pb-32">
+      <nav className="mb-8">
+        <Link href="/">Rem</Link>
+      </nav>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6 bg-transparent">
+        {recordings.map((recording) => (
+          <Link
+            href={`/recordings/${recording.id}`}
+            key={recording.id}
+            className="flex justify-center"
+          >
+            <Recording recording={recording} />
+          </Link>
+        ))}
+      </div>
+      <Link href="/new">
+        <Button className="fixed bottom-0 mb-8 left-1/2 -translate-x-1/2 max-w-xs w-full text-3xl font-serif">
+          New Recording
+        </Button>
+      </Link>
+    </div>
+  );
+}
+
+export default async function Home() {
+  const supabase = await createClient();
+
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError || !userData?.user) {
+    redirect("/login");
+  }
+
+  const { user } = userData;
+  const { data: recordings, error: recordingsError } = await supabase
+    .from("recordings")
+    .select(
+      "id, name, summary, emotion_tags, date, processing, raw_transcription"
+    )
+    .eq("user_id", user.id)
+    .order("date", { ascending: false });
+
+  if (recordingsError || !recordings || recordings.length === 0) {
+    return (
+      <SceneLayout>
+        <NoRecordings />
+      </SceneLayout>
+    );
+  }
+
+  return <Recordings recordings={recordings} />;
 }
