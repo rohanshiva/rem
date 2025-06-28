@@ -137,8 +137,7 @@ export default function Orb() {
     <>
       <div className="flex flex-col gap-4 items-center select-none [-webkit-touch-callout:none] [-webkit-tap-highlight-color:transparent]">
         <div
-          className={`w-32 h-32 rounded-full hover:cursor-pointer relative transition-colors duration-200 bg-accent`}
-          style={shadow.lg}
+          className={`w-32 h-32 rounded-full hover:cursor-pointer relative transition-colors duration-200 blue-card-bg card-shadow`}
           onClick={handleOrbClick}
         ></div>
         <span className="font-serif text-3xl text-center">{getOrbText()}</span>

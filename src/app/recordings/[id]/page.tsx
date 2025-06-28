@@ -25,7 +25,7 @@ export default async function RecordingPage({
   const inViewOptions = { once: true, initial: true, amount: 0.1 };
 
   return (
-    <div>
+    <div className="text-foreground">
       <nav className="mb-8">
         <Link href="/">Rem</Link>
       </nav>

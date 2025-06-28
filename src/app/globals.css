@@ -9,19 +9,23 @@
 :root {
   --color-background: #fefefe;
   --color-foreground: #363737;
+  --color-inner-red: #da4547;
+  --color-inner-blue: #2178B8;
   --font-mono-accent: "Departure Mono", monospace;
 }
 
 @theme inline {
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);
+  --color-inner-red: var(--color-inner-red);
+  --color-inner-blue: var(--color-inner-blue);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-instrument-serif);
   --font-mono-accent: var(--font-mono-accent);
 
   --color-border: #f0f0f0;
-  --color-accent: #e36c46;
+  --color-accent: #42a5f5;
   --color-secondary: #fafafa;
 }
 
@@ -69,3 +73,80 @@ body {
 .red-card-bg {
   background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 50%, #ff7575 100%);
 }
+
+.blue-card-bg {
+  background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 50%, #42a5f5 100%);
+}
+
+.card-shadow {
+  box-shadow: inset -1px 1px 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Smooth Animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes revealSm {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-revealSm {
+  animation: revealSm 0.6s ease-out forwards;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(-40px) scale(0.9);
+}
+
+/* Custom translate utilities only where Tailwind doesn't provide them */
+.-translate-y-\[30\%\] {
+  --tw-translate-y: -30%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.-translate-y-\[100\%\] {
+  --tw-translate-y: -100%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+/* Console bump animation - only transform, no opacity */
+@keyframes consoleBump {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-8px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-console-bump {
+  animation: consoleBump 0.4s ease-out;
+}
+
+
