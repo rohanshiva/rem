@@ -179,9 +179,22 @@ body {
   justify-content: center;
 }
 
+@media (max-width: 768px) {
+  .screen-gameboy-text {
+    font-size: 26px;
+  }
+}
+
 @media (max-width: 640px) {
   .screen-gameboy-text {
+    font-size: 20px;
     -webkit-text-fill-color: initial;
+  }
+}
+
+@media (max-width: 480px) {
+  .screen-gameboy-text {
+    font-size: 16px;
   }
 }
 

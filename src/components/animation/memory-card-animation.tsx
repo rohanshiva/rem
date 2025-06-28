@@ -1,45 +1,45 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import Console from "./console";
 
-export default function AnimationPage() {
-  const [isStarted, setIsStarted] = useState(false);
+type RecordingType = {
+  id: string;
+  name: string;
+  summary?: string;
+  emotion_tags?: string[];
+  raw_transcription?: string;
+};
+
+interface MemoryCardAnimationProps {
+  recording: RecordingType;
+  onAnimationComplete: () => void;
+}
+
+export default function MemoryCardAnimation({
+  recording,
+  onAnimationComplete,
+}: MemoryCardAnimationProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const handleStart = () => {
-    setIsStarted(true);
-    
+  useEffect(() => {
+    // Start animation sequence
     // Play audio at impact moment (around 1.5s)
     setTimeout(() => {
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
         audioRef.current.play().catch(() => {
-          console.log('Audio play failed');
+          console.log("Audio play failed");
         });
       }
     }, 1500);
-  };
 
-  if (!isStarted) {
-    return (
-      <div className="flex items-center justify-center min-h-full">
-        <div className="flex flex-col items-center justify-center gap-6">
-          <div className="text-center">
-            <h1 className="text-4xl font-serif mb-2">REM Memory</h1>
-            <p className="text-lg text-muted-foreground">Dream Recording System</p>
-          </div>
-          <button
-            onClick={handleStart}
-            className="px-8 py-4 bg-accent text-accent-foreground rounded-lg text-xl font-serif hover:bg-accent/90 transition-colors"
-          >
-            Start System
-          </button>
-        </div>
-      </div>
-    );
-  }
+    // Animation completes after 5.5s
+    setTimeout(() => {
+      onAnimationComplete();
+    }, 3000);
+  }, [onAnimationComplete]);
 
   return (
     <div className="flex items-center justify-center min-h-full">
@@ -56,12 +56,12 @@ export default function AnimationPage() {
             className="w-[38%]"
             initial={{ y: "-200%" }}
             animate={{ y: "10%" }}
-            transition={{ 
+            transition={{
               type: "spring",
               stiffness: 300,
               damping: 30,
               mass: 1,
-              delay: 1
+              delay: 1,
             }}
           >
             {/* Card */}
@@ -79,14 +79,14 @@ export default function AnimationPage() {
                   </div>
                 </div>
                 <div className="font-mono text-[2.5vw] sm:text-base w-full break-words truncate block">
-                  Dream Recording
+                  {recording?.name || "Dream Recording"}
                 </div>
                 <div className="flex flex-row gap-[2%] justify-between w-full items-center mt-[2%]">
                   <div className="font-mono text-[2.0vw] sm:text-sm text-muted-foreground">
                     Ready
                   </div>
                   <div className="font-mono text-[1.8vw] sm:text-xs text-right ml-auto">
-                    Now
+                    Recorded
                   </div>
                 </div>
               </div>
@@ -94,35 +94,35 @@ export default function AnimationPage() {
           </motion.div>
         </motion.div>
         {/* Console */}
-        <motion.div 
+        <motion.div
           className="flex justify-center w-full"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-                  <motion.div
-          className="relative flex justify-center max-w-full"
-          initial={{ y: 0 }}
-          animate={{ y: [0, -8, 0, -4, 0] }}
-          transition={{ 
-            duration: 0.4, 
-            delay: 1.5,
-            ease: "easeOut"
-          }}
-        >
+          <motion.div
+            className="relative flex justify-center max-w-full"
+            initial={{ y: 0 }}
+            animate={{ y: [0, -8, 0, -4, 0] }}
+            transition={{
+              duration: 0.4,
+              delay: 1.5,
+              ease: "easeOut",
+            }}
+          >
             <div className="relative w-full">
               {/* Screen Overlay */}
               <div className="absolute z-10 flex h-full w-full items-center justify-center bg-transparent px-[20%] py-[3%]">
-                <motion.div 
+                <motion.div
                   className="flex h-full w-full items-center justify-center overflow-hidden rounded-md"
                   initial={{ backgroundColor: "#000000", boxShadow: "none" }}
-                  animate={{ 
-                    backgroundColor: "#ffffff", 
-                    boxShadow: "0 0 10px white" 
+                  animate={{
+                    backgroundColor: "#ffffff",
+                    boxShadow: "0 0 10px white",
                   }}
                   transition={{ duration: 0.3, delay: 1.7 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className="relative h-full w-full"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
