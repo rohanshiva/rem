@@ -62,7 +62,7 @@ function Recording({ recording }: { recording: RecordingType }) {
             <div
               className={`rounded-md ${innerBgClass} flex flex-col items-center justify-evenly w-full mb-2 shadow-xs flex-1`}
             >
-              <div className="w-0 h-0 border-l-[24px] border-r-[24px] border-t-[16px] border-l-transparent border-r-transparent border-t-background mx-auto" />
+              <div className="card-triangle" />
               <div className="flex flex-col items-center justify-center">
                 <div className="font-mono text-base tracking-widest text-center mb-2 font-mono-accent">
                   REM MEMORY CARD
