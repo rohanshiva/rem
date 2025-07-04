@@ -44,10 +44,10 @@ export default function MemoryCardAnimation({
   return (
     <div className="flex items-center justify-center min-h-full">
       <audio ref={audioRef} src="/clunk.DMmBR1fs.m4a" preload="auto" />
-      <div className="flex flex-col items-center justify-center pt-32 sm:pt-44 w-full max-w-[683px] mx-auto px-4 sm:px-6">
+      <div className="flex flex-col items-center justify-center pt-32 sm:pt-44 w-full mx-auto">
         {/* Card - starts above and slides down automatically */}
         <motion.div
-          className="-mb-[17%] flex items-center justify-center w-full"
+          className="-mb-[17%] flex items-center justify-center w-full max-w-[683px]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.1, delay: 1 }}
@@ -101,7 +101,7 @@ export default function MemoryCardAnimation({
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <motion.div
-            className="relative flex justify-center max-w-full"
+            className="flex justify-center items-center max-w-full"
             initial={{ y: 0 }}
             animate={{ y: [0, -8, 0, -4, 0] }}
             transition={{
@@ -110,9 +110,9 @@ export default function MemoryCardAnimation({
               ease: "easeOut",
             }}
           >
-            <div className="relative w-full">
+            <div className="relative flex justify-center items-center w-full">
               {/* Screen Overlay */}
-              <div className="absolute z-10 flex h-full w-full items-center justify-center bg-transparent px-[20%] py-[3%]">
+              <div className="absolute z-10 flex h-full w-full items-center justify-center bg-transparent px-[20%] py-[3%] mt-[2%]">
                 <motion.div
                   className="flex h-full w-full items-center justify-center overflow-hidden rounded-md"
                   initial={{ backgroundColor: "#000000", boxShadow: "none" }}
@@ -134,9 +134,7 @@ export default function MemoryCardAnimation({
                   </motion.div>
                 </motion.div>
               </div>
-              <div className="w-full">
-                <Console />
-              </div>
+              <Console />
             </div>
           </motion.div>
         </motion.div>

@@ -23,7 +23,7 @@ export default function RecordingWithAnimation({
   const [showAnimation, setShowAnimation] = useState(true);
 
   const handleAnimationComplete = () => {
-    setShowAnimation(false);
+    setShowAnimation(true);
   };
 
   if (showAnimation) {
