@@ -1,5 +1,57 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+enum RecordingState {
+  IDLE = "idle",
+  RECORDING = "recording",
+  PAUSED = "paused",
+  PROCESSING = "processing",
+  ERROR = "error",
+}
+
+interface AudioRecording {
+  blob: Blob;
+  filename: string;
+  mimeType: string;
+  size: number;
+}
+
+class AudioRecorderError extends Error {
+  constructor(
+    message: string,
+    public readonly code: string,
+    public readonly originalError?: unknown
+  ) {
+    super(message);
+    this.name = "AudioRecorderError";
+  }
+}
+
+interface AudioRecorderConfig {
+  echoCancellation?: boolean;
+  noiseSuppression?: boolean;
+  autoGainControl?: boolean;
+  filenamePrefix?: string;
+}
+
+interface UseAudioRecorderReturn {
+  state: RecordingState;
+  formattedDuration: string;
+  error: AudioRecorderError | null;
+
+  isIdle: boolean;
+  isRecording: boolean;
+  isPaused: boolean;
+  isProcessing: boolean;
+  hasError: boolean;
+
+  startRecording: () => Promise<void>;
+  pauseRecording: () => void;
+  resumeRecording: () => void;
+  stopRecording: () => Promise<AudioRecording>;
+  resetRecording: () => void;
+  clearError: () => void;
+}
+
 const SUPPORTED_MIME_TYPES = [
   "audio/webm;codecs=opus",
   "audio/mp4",
@@ -18,57 +70,11 @@ const MIME_TYPE_TO_EXTENSION: Record<string, string> = {
   "audio/wav": "wav",
 };
 
-export enum RecordingState {
-  IDLE = "idle",
-  RECORDING = "recording",
-  PAUSED = "paused",
-  PROCESSING = "processing",
-  ERROR = "error",
-}
 
-export interface AudioRecording {
-  blob: Blob;
-  filename: string;
-  mimeType: string;
-  size: number;
-}
 
-export class AudioRecorderError extends Error {
-  constructor(
-    message: string,
-    public readonly code: string,
-    public readonly originalError?: unknown
-  ) {
-    super(message);
-    this.name = "AudioRecorderError";
-  }
-}
 
-export interface AudioRecorderConfig {
-  echoCancellation?: boolean;
-  noiseSuppression?: boolean;
-  autoGainControl?: boolean;
-  filenamePrefix?: string;
-}
 
-export interface UseAudioRecorderReturn {
-  state: RecordingState;
-  formattedDuration: string;
-  error: AudioRecorderError | null;
 
-  isIdle: boolean;
-  isRecording: boolean;
-  isPaused: boolean;
-  isProcessing: boolean;
-  hasError: boolean;
-
-  startRecording: () => Promise<void>;
-  pauseRecording: () => void;
-  resumeRecording: () => void;
-  stopRecording: () => Promise<AudioRecording>;
-  resetRecording: () => void;
-  clearError: () => void;
-}
 
 const getBestSupportedMimeType = (): string => {
   for (const type of SUPPORTED_MIME_TYPES) {

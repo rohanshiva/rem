@@ -1,17 +1,10 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "Departure Mono";
-  src: url("/fonts/DepartureMono-Regular.woff2");
-  font-display: swap;
-}
-
 :root {
   --color-background: #fefefe;
   --color-foreground: #363737;
   --color-inner-red: #da4547;
   --color-inner-blue: #2178b8;
-  --font-mono-accent: "Departure Mono", monospace;
 }
 
 @theme inline {

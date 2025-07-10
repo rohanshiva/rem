@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import localFont from 'next/font/local'
 import "./globals.css";
 import { Toaster } from "sonner";
 import { BlockLoader } from "@/components/ui/block-loader";
+import { ViewTransitions } from "next-view-transitions";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,6 +22,11 @@ const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
 });
 
+const departureMono = localFont({
+  variable: "--font-mono-accent",
+  src: "../../public/fonts/DepartureMono-Regular.woff2"
+})
+
 export const metadata: Metadata = {
   title: "Rem",
   description: "Remember your dreams",
@@ -31,29 +38,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
-      >
-        <div className="w-full max-w-xl mx-auto h-[100dvh] flex flex-col py-8 px-4">
-          <Toaster
-            richColors
-            toastOptions={{
-              style: {
-                background: "var(--color-secondary)",
-                border: "1px solid var(--color-border)",
-                color: "var(--foreground)",
-                boxShadow: "none",
-                cursor: "grab",
-              },
-            }}
-            icons={{
-              loading: <BlockLoader className="text-sm" />,
-            }}
-          />
-          {children}
-        </div>
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} ${departureMono.variable} antialiased`}
+        >
+          <div className="w-full max-w-xl mx-auto h-[100dvh] flex flex-col py-8 px-4">
+            <Toaster
+              richColors
+              toastOptions={{
+                style: {
+                  background: "var(--color-secondary)",
+                  border: "1px solid var(--color-border)",
+                  color: "var(--foreground)",
+                  boxShadow: "none",
+                  cursor: "grab",
+                },
+              }}
+              icons={{
+                loading: <BlockLoader className="text-sm" />,
+              }}
+            />
+            {children}
+          </div>
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }

@@ -1,14 +1,14 @@
 import * as React from 'react'
 import { Points, Vector3, Spherical, Color } from 'three'
 
-export type StarsProps = {
-  radius?: number
-  depth?: number
-  count?: number
-  factor?: number
-  fade?: boolean
-  speed?: number
-  color?: string
+type StarsProps = {
+  radius?: number;
+  depth?: number;
+  count?: number;
+  factor?: number;
+  fade?: boolean;
+  speed?: number;
+  color?: string;
 }
 
 const genStar = (r: number) => {

@@ -1,6 +1,5 @@
 "use client";
 
-import { shadow } from "@/lib/utils";
 import { useAudioRecorder } from "@/app/hooks/use-audio-recorder";
 import { Drawer } from "vaul";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -10,6 +9,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { triggerProcessing } from "@/app/actions/trigger-processing";
+import AnimatedOrb from "@/components/ui/animated-orb";
 
 export default function Orb() {
   const {
@@ -136,10 +136,7 @@ export default function Orb() {
   return (
     <>
       <div className="flex flex-col gap-4 items-center select-none [-webkit-touch-callout:none] [-webkit-tap-highlight-color:transparent]">
-        <div
-          className={`w-32 h-32 rounded-full hover:cursor-pointer relative transition-colors duration-200 blue-card-bg card-shadow`}
-          onClick={handleOrbClick}
-        ></div>
+        <AnimatedOrb onClick={handleOrbClick} />
         <span className="font-serif text-3xl text-center">{getOrbText()}</span>
       </div>
 

@@ -1,26 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import type { RecordingWithDetails } from "@/types";
+
+import { useEffect, useRef } from "react";
 import { motion } from "motion/react";
-import Console from "./console";
+import Console from "@/components/screens/recording/console";
 
-type RecordingType = {
-  id: string;
-  name: string;
-  summary?: string;
-  emotion_tags?: string[];
-  raw_transcription?: string;
-};
-
-interface MemoryCardAnimationProps {
-  recording: RecordingType;
+interface AnimationProps {
+  recording: RecordingWithDetails;
   onAnimationComplete: () => void;
 }
 
-export default function MemoryCardAnimation({
+export default function Animation({
   recording,
   onAnimationComplete,
-}: MemoryCardAnimationProps) {
+}: AnimationProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -66,12 +60,12 @@ export default function MemoryCardAnimation({
           >
             {/* Card */}
             <div className="w-full aspect-[260/286]">
-              <div className="rounded-lg blue-card-bg px-[4%] py-[4%] flex flex-col items-center justify-center w-full h-full text-background card-shadow">
-                <div className="rounded-md bg-inner-blue flex flex-col items-center justify-evenly w-full mb-[2%] shadow-xs flex-1">
+              <div className="rounded-lg blue-card-bg px-[6%] py-[6%] flex flex-col items-center justify-center w-full h-full text-background card-shadow">
+                <div className="rounded-md bg-inner-blue flex flex-col items-center justify-evenly w-full mb-[2%] shadow-xs flex-1 gap-0">
                   <div className="card-triangle" />
                   <div className="flex flex-col items-center justify-center">
-                    <div className="font-mono text-[2.5vw] sm:text-base tracking-widest text-center mb-[2%] font-mono-accent">
-                      REM MEMORY CARD
+                    <div className="font-mono text-[2vw] sm:text-base tracking-widest text-center mb-[2%] font-mono-accent">
+                      <div>REM MEMORY CARD</div>
                     </div>
                     <div className="font-mono text-[2.5vw] sm:text-base text-center font-mono-accent">
                       8 MB
@@ -129,7 +123,10 @@ export default function MemoryCardAnimation({
                     transition={{ duration: 0.5, delay: 2.0 }}
                   >
                     <div className="screen-gameboy-text startup absolute flex items-center justify-center inset-0">
-                      REM MEMORY
+                      <span className="flex flex-row gap-2">
+                        <span>DREAM</span>
+                        <span>MACHINE</span>
+                      </span>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -141,4 +138,4 @@ export default function MemoryCardAnimation({
       </div>
     </div>
   );
-}
+} 
