@@ -12,6 +12,7 @@ const svgPathBase = {
 
 type AnimatedOrbProps = {
   onClick?: React.MouseEventHandler<HTMLDivElement>;
+  animate?: boolean;
   style?: React.CSSProperties;
   className?: string;
   size?: number; // Size in pixels, defaults to 82
@@ -20,6 +21,7 @@ type AnimatedOrbProps = {
 const AnimatedOrb: React.FC<AnimatedOrbProps> = ({
   onClick,
   style,
+  animate,
   className,
   size = 128, // Default to original size
 }) => {
@@ -184,42 +186,46 @@ const AnimatedOrb: React.FC<AnimatedOrbProps> = ({
         }}
       />
       {/* Animated white dot particles */}
-      {[
-        { left: 40.8266, top: 24, size: 2, delay: 0.2 },
-        { left: 38.2062, top: 24, size: 1, delay: 0.5 },
-        { left: 54.4517, top: 24, size: 1, delay: 0.7 },
-        { left: 23.7434, top: 24, size: 1, delay: 0.9 },
-        { left: 38.1677, top: 24, size: 1, delay: 1.1 },
-        { left: 61.8953, top: 24, size: 1, delay: 1.3 },
-        { left: 61.5088, top: 24, size: 2, delay: 1.5 },
-        { left: 18.1885, top: 24, size: 2, delay: 1.7 },
-        { left: 63.2761, top: 24, size: 1, delay: 1.9 },
-        { left: 19.8409, top: 24, size: 1, delay: 2.1 },
-        { left: 56.1998, top: 24, size: 1, delay: 2.3 },
-        { left: 23.5837, top: 24, size: 1, delay: 2.5 }
-      ].map((dot, i) => (
-        <motion.div
-          key={i}
-          style={{
-            zIndex: 3,
-            position: "absolute",
-            height: `${s(dot.size)}px`,
-            width: `${s(dot.size)}px`,
-            borderRadius: "50%",
-            background: "rgb(255, 255, 255)",
-            left: `${s(dot.left)}px`,
-            top: `${s(dot.top)}px`,
-          }}
-          initial={{ opacity: 0, y: s(84) }}
-          animate={{ opacity: [0.67, 0.54, 0], y: s(-16) }}
-          transition={{
-            duration: 3,
-            ease: "linear",
-            delay: dot.delay,
-            repeat: Infinity,
-          }}
-        />
-      ))}
+      {animate && (
+        <>
+          {[
+            { left: 40.8266, top: 24, size: 2, delay: 0.2 },
+            { left: 38.2062, top: 24, size: 1, delay: 0.5 },
+            { left: 54.4517, top: 24, size: 1, delay: 0.7 },
+            { left: 23.7434, top: 24, size: 1, delay: 0.9 },
+            { left: 38.1677, top: 24, size: 1, delay: 1.1 },
+            { left: 61.8953, top: 24, size: 1, delay: 1.3 },
+            { left: 61.5088, top: 24, size: 2, delay: 1.5 },
+            { left: 18.1885, top: 24, size: 2, delay: 1.7 },
+            { left: 63.2761, top: 24, size: 1, delay: 1.9 },
+            { left: 19.8409, top: 24, size: 1, delay: 2.1 },
+            { left: 56.1998, top: 24, size: 1, delay: 2.3 },
+            { left: 23.5837, top: 24, size: 1, delay: 2.5 },
+          ].map((dot, i) => (
+            <motion.div
+              key={i}
+              style={{
+                zIndex: 3,
+                position: "absolute",
+                height: `${s(dot.size)}px`,
+                width: `${s(dot.size)}px`,
+                borderRadius: "50%",
+                background: "rgb(255, 255, 255)",
+                left: `${s(dot.left)}px`,
+                top: `${s(dot.top)}px`,
+              }}
+              initial={{ opacity: 0, y: s(84) }}
+              animate={{ opacity: [0.67, 0.54, 0], y: s(-16) }}
+              transition={{
+                duration: 3,
+                ease: "linear",
+                delay: dot.delay,
+                repeat: Infinity,
+              }}
+            />
+          ))}
+        </>
+      )}
       <div
         style={{
           opacity: 0.16,
@@ -309,91 +315,103 @@ const AnimatedOrb: React.FC<AnimatedOrbProps> = ({
         }}
       />
 
-      {/* First SVG with outer orbital paths */}
-      <svg
-        style={{
-          position: "absolute",
-          top: `${s(-12)}px`,
-          left: `${s(-12)}px`,
-          width: `${s(90)}px`,
-          height: `${s(90)}px`,
-          pointerEvents: "none",
-        }}
-      >
-        <motion.path
-          {...svgPathBase}
-          d={`M ${s(8)} ${s(45)} A ${s(34)} ${s(34)} 0 0 1 ${s(82)} ${s(45)}`}
-          opacity={0.4}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.67, 0], strokeDashoffset: [200, 0] }}
-          style={{
-            transform: "rotate(-30deg)",
-            transformOrigin: `${s(45)}px ${s(45)}px`,
-          }}
-          transition={{ duration: 2.55, delay: 0, repeat: Infinity }}
-        />
-        <motion.path
-          {...svgPathBase}
-          d={`M ${s(82)} ${s(45)} A ${s(34)} ${s(34)} 0 0 0 ${s(8)} ${s(45)}`}
-          opacity={0.3}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.67, 0], strokeDashoffset: [-200, 0] }}
-          style={{
-            transform: "rotate(150deg)",
-            transformOrigin: `${s(45)}px ${s(45)}px`,
-          }}
-          transition={{
-            duration: 2.9988541080779676,
-            delay: 2.5705600040299337,
-            repeat: Infinity,
-          }}
-        />
-      </svg>
+      {animate && (
+        <>
+          {/* First SVG with outer orbital paths */}
+          <svg
+            style={{
+              position: "absolute",
+              top: `${s(-12)}px`,
+              left: `${s(-12)}px`,
+              width: `${s(90)}px`,
+              height: `${s(90)}px`,
+              pointerEvents: "none",
+            }}
+          >
+            <motion.path
+              {...svgPathBase}
+              d={`M ${s(8)} ${s(45)} A ${s(34)} ${s(34)} 0 0 1 ${s(82)} ${s(
+                45
+              )}`}
+              opacity={0.4}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.67, 0], strokeDashoffset: [200, 0] }}
+              style={{
+                transform: "rotate(-30deg)",
+                transformOrigin: `${s(45)}px ${s(45)}px`,
+              }}
+              transition={{ duration: 2.55, delay: 0, repeat: Infinity }}
+            />
+            <motion.path
+              {...svgPathBase}
+              d={`M ${s(82)} ${s(45)} A ${s(34)} ${s(34)} 0 0 0 ${s(8)} ${s(
+                45
+              )}`}
+              opacity={0.3}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.67, 0], strokeDashoffset: [-200, 0] }}
+              style={{
+                transform: "rotate(150deg)",
+                transformOrigin: `${s(45)}px ${s(45)}px`,
+              }}
+              transition={{
+                duration: 2.9988541080779676,
+                delay: 2.5705600040299337,
+                repeat: Infinity,
+              }}
+            />
+          </svg>
 
-      {/* Second SVG with inner orbital paths */}
-      <svg
-        style={{
-          position: "absolute",
-          top: "0px",
-          left: "0px",
-          width: `${s(90)}px`,
-          height: `${s(90)}px`,
-          pointerEvents: "none",
-        }}
-      >
-        <motion.path
-          {...svgPathBase}
-          d={`M ${s(15)} ${s(70)} A ${s(40)} ${s(40)} 0 0 1 ${s(75)} ${s(20)}`}
-          opacity={0.25}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.67, 0], strokeDashoffset: [200, 0] }}
-          style={{
-            transform: "rotate(-15deg)",
-            transformOrigin: `${s(45)}px ${s(45)}px`,
-          }}
-          transition={{
-            duration: 4.348984619355587,
-            delay: 1.060799376173018,
-            repeat: Infinity,
-          }}
-        />
-        <motion.path
-          {...svgPathBase}
-          d={`M ${s(15)} ${s(20)} A ${s(40)} ${s(40)} 0 0 0 ${s(75)} ${s(70)}`}
-          opacity={0.2}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.67, 0], strokeDashoffset: [-200, 0] }}
-          style={{
-            transform: "rotate(15deg)",
-            transformOrigin: `${s(45)}px ${s(45)}px`,
-          }}
-          transition={{
-            duration: 2.121329010943242,
-            delay: 3.8558400060449003,
-            repeat: Infinity,
-          }}
-        />
-      </svg>
+          {/* Second SVG with inner orbital paths */}
+          <svg
+            style={{
+              position: "absolute",
+              top: "0px",
+              left: "0px",
+              width: `${s(90)}px`,
+              height: `${s(90)}px`,
+              pointerEvents: "none",
+            }}
+          >
+            <motion.path
+              {...svgPathBase}
+              d={`M ${s(15)} ${s(70)} A ${s(40)} ${s(40)} 0 0 1 ${s(75)} ${s(
+                20
+              )}`}
+              opacity={0.25}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.67, 0], strokeDashoffset: [200, 0] }}
+              style={{
+                transform: "rotate(-15deg)",
+                transformOrigin: `${s(45)}px ${s(45)}px`,
+              }}
+              transition={{
+                duration: 4.348984619355587,
+                delay: 1.060799376173018,
+                repeat: Infinity,
+              }}
+            />
+            <motion.path
+              {...svgPathBase}
+              d={`M ${s(15)} ${s(20)} A ${s(40)} ${s(40)} 0 0 0 ${s(75)} ${s(
+                70
+              )}`}
+              opacity={0.2}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.67, 0], strokeDashoffset: [-200, 0] }}
+              style={{
+                transform: "rotate(15deg)",
+                transformOrigin: `${s(45)}px ${s(45)}px`,
+              }}
+              transition={{
+                duration: 2.121329010943242,
+                delay: 3.8558400060449003,
+                repeat: Infinity,
+              }}
+            />
+          </svg>
+        </>
+      )}
     </div>
   );
 };

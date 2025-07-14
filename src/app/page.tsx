@@ -17,7 +17,8 @@ export default async function Page() {
       "id, name, summary, emotion_tags, date, processing, raw_transcription, audio_storage_path"
     )
     .eq("user_id", user.id)
-    .order("date", { ascending: false });
+    .order("date", { ascending: false })
+    .order("created_at", { ascending: false });
 
   return <Home recordings={recordings || []} />;
 }

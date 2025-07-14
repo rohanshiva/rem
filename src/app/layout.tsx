@@ -3,8 +3,8 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import localFont from 'next/font/local'
 import "./globals.css";
 import { Toaster } from "sonner";
-import { BlockLoader } from "@/components/ui/block-loader";
 import { ViewTransitions } from "next-view-transitions";
+import { Loader } from "@/components/ui/loader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,7 +56,7 @@ export default function RootLayout({
                 },
               }}
               icons={{
-                loading: <BlockLoader className="text-sm" />,
+                loading: <Loader />,
               }}
             />
             {children}

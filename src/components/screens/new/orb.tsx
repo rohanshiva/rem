@@ -7,8 +7,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
-import { triggerProcessing } from "@/app/actions/trigger-processing";
+import { uploadRecording } from "@/app/actions/upload-recording";
 import AnimatedOrb from "@/components/ui/animated-orb";
 
 export default function Orb() {
@@ -27,7 +26,6 @@ export default function Orb() {
   } = useAudioRecorder();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const supabase = createClient();
   const router = useRouter();
 
   // Sync drawer state with recording state - drawer should only be open when paused
@@ -81,35 +79,8 @@ export default function Orb() {
       const recording = await stopRecording();
       console.log("Recording completed:", recording);
 
-      // Get the current user
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-      if (userError) throw userError;
-      if (!user) {
-        router.push("/login");
-        return;
-      }
-
-      // Upload to Supabase Storage
-      const storagePath = `${user.id}/${recording.filename}`;
-      const { error: uploadError } = await supabase.storage
-        .from("recordings")
-        .upload(storagePath, recording.blob, {
-          cacheControl: "3600",
-          upsert: false,
-        });
-
-      if (uploadError) throw uploadError;
-
-      const { error: triggerProcessingError } = await triggerProcessing(
-        storagePath
-      );
-
-      if (triggerProcessingError) {
-        throw triggerProcessingError;
-      }
+      // Upload via server action
+      await uploadRecording(recording.blob, recording.filename);
 
       // Close drawer and navigate on success
       setIsDrawerOpen(false);
@@ -136,7 +107,7 @@ export default function Orb() {
   return (
     <>
       <div className="flex flex-col gap-4 items-center select-none [-webkit-touch-callout:none] [-webkit-tap-highlight-color:transparent]">
-        <AnimatedOrb onClick={handleOrbClick} />
+        <AnimatedOrb onClick={handleOrbClick} animate={isRecording} />
         <span className="font-serif text-3xl text-center">{getOrbText()}</span>
       </div>
 
@@ -154,25 +125,19 @@ export default function Orb() {
           <Drawer.Content className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-fit outline-none">
             <div className="bg-secondary px-4 py-2 flex flex-col rounded-md border-1 border-border">
               <VisuallyHidden>
-                <Drawer.Title>Save Recording</Drawer.Title>
+                <Drawer.Title>Save Dream</Drawer.Title>
               </VisuallyHidden>
-              <div className="flex items-center gap-6 justify-between">
+              <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 justify-between">
+                <span className="text-center sm:text-left text-md font-medium">
+                  Do you want to save your dream?
+                </span>
                 <Button
                   onClick={handleSaveRecording}
                   size="lg"
                   disabled={isDrawerOpen && !isPaused}
+                  className="text-xl font-serif font-bold"
                 >
                   Save
-                </Button>
-                <Button
-                  size="lg"
-                  variant="secondary"
-                  onClick={() => {
-                    setIsDrawerOpen(false);
-                    handleDrawerClose();
-                  }}
-                >
-                  Resume
                 </Button>
               </div>
             </div>

@@ -11,7 +11,7 @@ export default async function Page({
   const supabase = await createClient();
   const { data: recording, error } = await supabase
     .from("recordings")
-    .select("id, name, summary, raw_transcription, emotion_tags")
+    .select("id, name, summary, raw_transcription, emotion_tags, image_storage_path")
     .eq("id", id)
     .single();
 

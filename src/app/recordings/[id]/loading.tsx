@@ -1,5 +1,14 @@
-import LoadingScreen from "@/components/ui/loading-screen";
+import { Link } from "next-view-transitions";
 
 export default function Loading() {
-  return <LoadingScreen />;
+  return (
+    <div>
+      <nav>
+        <Link href="/" className="text-lg">Rem</Link>
+      </nav>
+      <div className="flex flex-col items-center justify-center">
+        <div className="text-xl font-mono-accent shimmer">Loading...</div>
+      </div>
+    </div>
+  );
 }

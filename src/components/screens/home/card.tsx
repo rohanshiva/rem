@@ -3,10 +3,16 @@
 import type { Recording } from "@/types";
 
 import { Link } from "next-view-transitions";
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import { formatter } from "@/lib/formatter";
 import { Eye, Trash2 } from "lucide-react";
 import { deleteRecording } from "@/app/actions/recordings";
+import React from "react";
 
 interface CardProps {
   recording: Recording;
@@ -23,8 +29,8 @@ export const Card = ({ recording }: CardProps) => {
       <span className="shimmer shimmer-background">Processing...</span>
     ) : null;
 
-  const CardContent = () => (
-    <div className="w-[260px] h-[286px]">
+  const CardContent = React.forwardRef<HTMLDivElement>((props, ref) => (
+    <div ref={ref} className="w-[260px] h-[286px]">
       <div className="rounded-lg blue-card-bg px-4 py-4 flex flex-col items-center justify-center cursor-pointer w-full h-full text-background transition-transform duration-200 hover:-rotate-2 card-shadow">
         <div className="rounded-md bg-inner-blue flex flex-col items-center justify-evenly w-full mb-2 shadow-xs flex-1">
           <div className="card-triangle" />
@@ -53,7 +59,7 @@ export const Card = ({ recording }: CardProps) => {
         </div>
       </div>
     </div>
-  );
+  ));
 
   const CardMenu = () => (
     <ContextMenuContent>
@@ -80,10 +86,10 @@ export const Card = ({ recording }: CardProps) => {
   return (
     <Link href={`/recordings/${recording.id}`} className="flex">
       <ContextMenu>
-        <ContextMenuTrigger asChild>
+        <ContextMenuTrigger>
           <CardContent />
         </ContextMenuTrigger>
-        <CardMenu/>
+        <CardMenu />
       </ContextMenu>
     </Link>
   );

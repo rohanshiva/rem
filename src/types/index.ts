@@ -16,4 +16,5 @@ export type RecordingWithDetails = {
   summary?: string;
   raw_transcription?: string;
   emotion_tags?: string[];
+  image_storage_path?: string;
 }; 

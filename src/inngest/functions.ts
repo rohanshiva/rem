@@ -4,6 +4,88 @@ import { generateObject } from "ai";
 import { z } from "zod";
 import { inngest } from "@/inngest/client";
 import { createServiceClient } from "@/utils/supabase/service";
+import { downloadFile, uploadFile } from "@/lib/storage";
+import Replicate from "replicate";
+
+// Image generation configuration
+const IMAGE_MODEL =
+  "bingbangboom-lab/flux-dreamscape:b761fa16918356ee07f31fad9b0d41d8919b9ff08f999e2d298a5a35b672f47e";
+const IMAGE_STYLE = "BSstyle004";
+const IMAGE_CONFIG = {
+  model: "dev",
+  go_fast: false,
+  lora_scale: 1,
+  megapixels: "1",
+  num_outputs: 1,
+  aspect_ratio: "16:9",
+  output_format: "webp",
+  guidance_scale: 3.5,
+  output_quality: 80,
+  prompt_strength: 0.8,
+  extra_lora_scale: 0.8,
+  num_inference_steps: 28,
+} as const;
+
+// Generate image using Replicate
+async function generateDreamImage(prompt: string): Promise<string> {
+  const replicate = new Replicate();
+  const styledPrompt = `${prompt}, in the style of ${IMAGE_STYLE}`;
+
+  const output = (await replicate.run(IMAGE_MODEL, {
+    input: {
+      ...IMAGE_CONFIG,
+      prompt: styledPrompt,
+    },
+  })) as string[];
+
+  return output[0];
+}
+
+// Upload image to R2 and update database
+async function storeGeneratedImage(
+  imageUrl: string,
+  recordingId: string,
+  userId: string,
+  supabase: ReturnType<typeof createServiceClient>
+): Promise<string> {
+  // Download the generated image
+  const imageResponse = await fetch(imageUrl);
+  const imageBlob = await imageResponse.blob();
+
+  // Upload to R2
+  const imageFileName = `${recordingId}-${Date.now()}.webp`;
+  const imagePath = `${userId}/images/${imageFileName}`;
+  await uploadFile(imagePath, imageBlob);
+
+  // Update recording with image path
+  const { error } = await supabase
+    .from("recordings")
+    .update({ image_storage_path: imagePath, processing: false })
+    .eq("id", recordingId);
+
+  if (error) {
+    throw Error("Failed to update recording with image path.");
+  }
+
+  return imagePath;
+}
+
+// Complete image generation process
+async function processImageGeneration(
+  imagePrompt: string,
+  recordingId: string,
+  userId: string,
+  supabase: ReturnType<typeof createServiceClient>
+): Promise<string> {
+  const imageUrl = await generateDreamImage(imagePrompt);
+  const imagePath = await storeGeneratedImage(
+    imageUrl,
+    recordingId,
+    userId,
+    supabase
+  );
+  return imagePath;
+}
 
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
@@ -63,18 +145,6 @@ The retelling must stay grounded in what ${username} described. Do **not invent*
 
 ---
 
-#### 6. Dream Image Prompt
-
-* Create a rich and emotionally resonant text prompt that could be used to generate an image inspired by this dream.
-* The image should reflect a key moment, emotional theme, or symbolic insight from the dream.
-* Include core details from the dream: setting(s), important figures or symbols, notable objects or actions.
-* Use lighting, color, and composition to reflect the emotional tone (from the emotion tags).
-* You may extrapolate symbolically or stylistically to express dream logic — floating objects, surreal architecture, repeating symbols, hazy light — especially if details are vague or fragmented.
-* Default to a dreamy, surreal, emotionally expressive visual style unless the dream is explicitly grounded in physical realism.
-* Do not use photorealism unless it's clearly suggested by the dream's tone and content.
-* The result should feel like a snapshot from the dreamer's memory: vivid, strange, symbolic, emotionally truthful.
-* Output only a single paragraph of image description. Do not label it or explain it.
-
 ---
 
 ### Notes:
@@ -108,13 +178,7 @@ export const processRecording = inngest.createFunction(
     });
 
     const transcription = await step.run("transcribe-recording", async () => {
-      const { data: audioBlob, error: audioBlobError } = await supabase.storage
-        .from("recordings")
-        .download(audioStoragePath);
-
-      if (!audioBlob || audioBlobError) {
-        throw Error("Failed to fetch audio recording.");
-      }
+      const audioBlob = await downloadFile(audioStoragePath);
 
       const groq = new Groq();
 
@@ -153,7 +217,6 @@ export const processRecording = inngest.createFunction(
           emotionTags: z.array(z.string()),
           locationSettings: z.array(z.string()),
           keyCharacters: z.array(z.string()),
-          imagePrompt: z.string(),
         }),
         prompt: `Please analyze the following dream transcription:\n\n${transcription}`,
         system: analysisPrompt,
@@ -177,6 +240,28 @@ export const processRecording = inngest.createFunction(
       return object;
     });
 
+    const imagePrompt = await step.run("generate-image-prompt", async () => {
+      const { object } = await generateObject({
+        model: google("models/gemini-2.5-flash-preview-04-17"),
+        schema: z.object({
+          imagePrompt: z.string(),
+        }),
+        prompt: analysis.summary,
+        system: `You are a cinematic image prompt engineer for Dream Machine. Your task is to transform dream descriptions into evocative, visually grounded image prompts. Capture the emotional tone and surreal quality of the dream while staying faithful to its key symbols, characters, and cultural or spiritual references. Describe clearly visualizable scenes, using specific imagery, actions, and environments. Avoid generic or misleading metaphors. Write one vivid, cinematic sentence that can be realistically rendered by a image model.`,
+      });
+
+      return object.imagePrompt;
+    });
+
+    const imageStoragePath = await step.run("generate-image", async () => {
+      return await processImageGeneration(
+        imagePrompt,
+        recordingId,
+        user.id,
+        supabase
+      );
+    });
+
     return {
       success: true,
       recording: {
@@ -184,6 +269,8 @@ export const processRecording = inngest.createFunction(
         username: user.name,
         rawTranscription: transcription,
         analysis: analysis,
+        imagePrompt: imagePrompt,
+        imageStoragePath: imageStoragePath,
       },
     };
   }

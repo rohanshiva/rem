@@ -2,6 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
+import { deleteFile } from "@/lib/storage";
 
 export async function deleteRecording(
   recordingId: string,
@@ -10,13 +11,7 @@ export async function deleteRecording(
   const supabase = await createClient();
 
   if (audioStoragePath) {
-    const { error: storageError } = await supabase.storage
-      .from("audio")
-      .remove([audioStoragePath]);
-
-    if (storageError) {
-      throw Error("Failed to delete audio recording");
-    }
+    await deleteFile(audioStoragePath);
   }
 
   // Delete recording from database
