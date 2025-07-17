@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { Recording } from "@/components/screens/recording";
+import { getPresignedUrl } from "@/lib/storage";
 
 export default async function Page({
   params,
@@ -19,5 +20,10 @@ export default async function Page({
     return notFound();
   }
 
-  return <Recording recording={recording} />;
+  // Generate presigned URL for image if it exists
+  const imageUrl = recording.image_storage_path 
+    ? await getPresignedUrl(recording.image_storage_path, 3600) // 1 hour expiry
+    : null;
+
+  return <Recording recording={recording} imageUrl={imageUrl} />;
 }

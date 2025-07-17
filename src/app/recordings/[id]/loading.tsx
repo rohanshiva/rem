@@ -1,11 +1,9 @@
-import { Link } from "next-view-transitions";
+import Nav from "@/components/layout/nav";
 
 export default function Loading() {
   return (
     <div>
-      <nav>
-        <Link href="/" className="text-lg">Rem</Link>
-      </nav>
+      <Nav />
       <div className="flex flex-col items-center justify-center">
         <div className="text-xl font-mono-accent shimmer">Loading...</div>
       </div>

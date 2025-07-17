@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "./card";
 import { SceneLayout } from "@/components/layout/scene-layout";
 import { Title } from "@/components/layout/title";
+import Nav from "@/components/layout/nav";
 
 interface Props {
   recordings: Recording[];
@@ -24,9 +25,7 @@ export const Home = ({ recordings }: Props) => {
 
   const RecordingsList = () => (
     <div className="pb-32">
-      <nav className="mb-8 text-foreground text-lg">
-        <Link href="/">Rem</Link>
-      </nav>
+      <Nav className="mb-8" />
       <div className="grid grid-cols-1 min-[580px]:grid-cols-2 gap-y-6 gap-x-4 bg-transparent justify-items-center">
         {recordings.map((recording) => (
           <Card key={recording.id} recording={recording} />

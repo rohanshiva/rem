@@ -35,15 +35,15 @@ export const Card = ({ recording }: CardProps) => {
         <div className="rounded-md bg-inner-blue flex flex-col items-center justify-evenly w-full mb-2 shadow-xs flex-1">
           <div className="card-triangle" />
           <div className="flex flex-col items-center justify-center">
-            <div className="font-mono text-base tracking-widest text-center mb-2 font-mono-accent">
+            <div className="font-mono text-base tracking-widest text-center mb-2 font-mono-accent text-white">
               REM MEMORY CARD
             </div>
-            <div className="font-mono text-base text-center font-mono-accent">
+            <div className="font-mono text-base text-center font-mono-accent text-white">
               8 MB
             </div>
           </div>
         </div>
-        <div className="font-mono text-base w-full break-words truncate block">
+        <div className="font-mono text-base w-full break-words truncate block text-white">
           {recording.name || tag}
         </div>
         <div className="flex flex-row gap-2 justify-between w-full items-center mt-2">
@@ -51,7 +51,7 @@ export const Card = ({ recording }: CardProps) => {
             <ProcessingIndicator />
           </div>
           <div
-            className="font-mono text-xs text-right ml-auto"
+            className="font-mono text-xs text-right ml-auto text-white"
             title={exactDate}
           >
             {dateLabel}

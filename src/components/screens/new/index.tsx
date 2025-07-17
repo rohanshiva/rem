@@ -27,4 +27,4 @@ export const NewRecording = () => {
       <RecordingInterface />
     </div>
   );
-}; 
+};

@@ -2,9 +2,10 @@
 
 :root {
   --color-background: #fefefe;
-  --color-foreground: #363737;
-  --color-inner-red: #da4547;
+  --color-foreground: #08090a;
   --color-inner-blue: #2178b8;
+  --toast-background: oklch(88% 0.015 240 / 0.25);
+  --toast-border: oklch(92% 0.02 240 / 0.35);
 }
 
 @theme inline {
@@ -79,7 +80,7 @@ body {
   @apply w-0 h-0 mx-auto;
   border-left: min(24px, 3.5vw) solid transparent;
   border-right: min(24px, 3.5vw) solid transparent;
-  border-top: min(16px, 2.3vw) solid var(--color-background);
+  border-top: min(16px, 2.3vw) solid white;
 }
 
 /* Smooth Animations */
@@ -192,7 +193,7 @@ body {
 }
 
 .startup {
-  animation: screen-gameboy-text 3s 2.0s linear forwards;
+  animation: screen-gameboy-text 3s 2s linear forwards;
 }
 
 @keyframes screen-gameboy-text {
@@ -278,4 +279,24 @@ body {
   transition-delay: 0.5s;
 }
 
+/* Light mode */
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-background: #fefefe;
+    --color-foreground: #08090a;
+    --color-inner-blue: #2178b8;
+    --toast-background: oklch(88% 0.015 240 / 0.25);
+    --toast-border: oklch(92% 0.02 240 / 0.35);
+  }
+}
 
+/* Dark mode */
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #141414;
+    --color-foreground: #f7f8f8;
+    --color-inner-blue: #2178b8;
+    --toast-background: oklch(28% 0.01 240 / 0.4);
+    --toast-border: oklch(60% 0.01 240 / 0.3);
+  }
+} */

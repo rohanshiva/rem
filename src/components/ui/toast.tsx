@@ -20,7 +20,13 @@ function Toast(props: ToastProps) {
   const { title, description, button, id } = props;
 
   return (
-    <div className="flex rounded-md bg-secondary border-1 border-border w-full max-w-md items-center px-4 py-2 cursor-grab">
+    <div 
+      className="flex rounded-md w-full max-w-md items-center px-4 py-2 cursor-grab"
+      style={{
+        backgroundColor: 'oklch(56.78% 0.05 262.04 / 0.3)',
+        border: '1px solid oklch(77.16% 0.028 262.04 / 0.15)'
+      }}
+    >
       <div className="flex flex-1 items-center">
         <div className="w-full">
           {title && <p className="text-sm font-medium">{title}</p>}

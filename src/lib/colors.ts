@@ -2,7 +2,7 @@ export const colors = {
   background: "#FEFEFE",
   foreground: "#363737",
   border: "#F0F0F0",
-  accent: "#E36C46",
+  accent: "#42a5f5",
   secondary: "#FAFAFA",
 } as const;
 

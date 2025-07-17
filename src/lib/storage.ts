@@ -1,4 +1,5 @@
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const BUCKET_NAME = "rem";
 
@@ -72,4 +73,15 @@ export async function deleteFile(path: string): Promise<void> {
   });
 
   await client.send(command);
+}
+
+export async function getPresignedUrl(path: string, expiresIn: number = 3600): Promise<string> {
+  const client = createClient();
+  
+  const command = new GetObjectCommand({
+    Bucket: BUCKET_NAME,
+    Key: path,
+  });
+
+  return await getSignedUrl(client, command, { expiresIn });
 }

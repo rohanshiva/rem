@@ -48,8 +48,9 @@ export default function RootLayout({
               richColors
               toastOptions={{
                 style: {
-                  background: "var(--color-secondary)",
-                  border: "1px solid var(--color-border)",
+                  backgroundColor: "var(--toast-background)",
+                  border: `1px solid var(--toast-border)`,
+                  backdropFilter: "blur(12px)",
                   color: "var(--foreground)",
                   boxShadow: "none",
                   cursor: "grab",

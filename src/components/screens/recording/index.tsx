@@ -8,6 +8,7 @@ import * as FadeIn from "@/components/ui/fade-in";
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import Image from "next/image";
+import Nav from "@/components/layout/nav";
 
 function SectionParagraph({ children }: { children: React.ReactNode }) {
   return (
@@ -19,18 +20,17 @@ function SectionParagraph({ children }: { children: React.ReactNode }) {
 
 interface Props {
   recording: RecordingWithDetails;
+  imageUrl?: string | null;
 }
 
-export const Recording = ({ recording }: Props) => {
+export const Recording = ({ recording, imageUrl }: Props) => {
   const [isImageExpanded, setIsImageExpanded] = useState(false);
 
   return (
     <Sequence recording={recording}>
       <FadeIn.Container className="text-foreground">
         <FadeIn.Item>
-          <nav className="mb-8">
-            <Link href="/" className="text-lg">Rem</Link>
-          </nav>
+          <Nav className="mb-8" />
         </FadeIn.Item>
         
         <FadeIn.Item>
@@ -39,17 +39,17 @@ export const Recording = ({ recording }: Props) => {
           </h1>
         </FadeIn.Item>
 
-        {recording.image_storage_path && (
+        {imageUrl && (
           <FadeIn.Item>
             <div className="mb-8">
               <motion.div
-                className="relative w-full aspect-video rounded-lg overflow-hidden cursor-pointer"
+                className="relative w-full aspect-video rounded-lg overflow-hidden cursor-zoom-in"
                 onClick={() => setIsImageExpanded(true)}
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
                 <Image
-                  src={`/api/recordings/${recording.id}/image`}
+                  src={imageUrl!}
                   alt="Dream visualization"
                   fill
                   className="object-cover"
@@ -69,7 +69,7 @@ export const Recording = ({ recording }: Props) => {
                 {recording.emotion_tags.map((emotion: string) => (
                   <div
                     key={emotion}
-                    className="rounded-md px-2 py-1 bg-accent text-background font-mono text-sm card-shadow"
+                    className="rounded-md px-2 py-1 bg-accent text-white font-mono text-sm card-shadow"
                   >
                     {emotion}
                   </div>
@@ -110,7 +110,7 @@ export const Recording = ({ recording }: Props) => {
 
       {/* Full-screen image overlay */}
       <AnimatePresence>
-        {isImageExpanded && recording.image_storage_path && (
+        {isImageExpanded && imageUrl && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
@@ -128,14 +128,14 @@ export const Recording = ({ recording }: Props) => {
             
             {/* Expanded image */}
             <motion.div
-              className="relative max-w-[90vw] max-h-[90vh] rounded-lg overflow-hidden"
+              className="relative max-w-[90vw] max-h-[90vh] rounded-lg overflow-hidden cursor-zoom-out"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
             >
               <Image
-                src={`/api/recordings/${recording.id}/image`}
+                src={imageUrl!}
                 alt="Dream visualization"
                 width={1920}
                 height={1080}

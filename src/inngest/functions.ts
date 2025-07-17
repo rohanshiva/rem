@@ -210,7 +210,7 @@ export const processRecording = inngest.createFunction(
       const analysisPrompt = getAnalysisPrompt(user.name);
 
       const { object } = await generateObject({
-        model: google("models/gemini-2.5-flash-preview-04-17"),
+        model: google("models/gemini-2.5-flash"),
         schema: z.object({
           summary: z.string(),
           title: z.string(),
@@ -242,7 +242,7 @@ export const processRecording = inngest.createFunction(
 
     const imagePrompt = await step.run("generate-image-prompt", async () => {
       const { object } = await generateObject({
-        model: google("models/gemini-2.5-flash-preview-04-17"),
+        model: google("models/gemini-2.5-flash"),
         schema: z.object({
           imagePrompt: z.string(),
         }),

@@ -99,16 +99,23 @@ export default function Orb() {
   };
 
   const getOrbText = () => {
-    if (isRecording) return `Recording... ${formattedDuration}`;
     if (isPaused) return `Paused — ${formattedDuration}`;
-    return "Tap & Start Speaking";
+    return "Tap & tell me about your dream";
   };
 
   return (
     <>
       <div className="flex flex-col gap-4 items-center select-none [-webkit-touch-callout:none] [-webkit-tap-highlight-color:transparent]">
         <AnimatedOrb onClick={handleOrbClick} animate={isRecording} />
-        <span className="font-serif text-3xl text-center">{getOrbText()}</span>
+        {isRecording ? (
+          <div className="font-serif text-3xl text-center">
+            <span>Recording... {formattedDuration}</span>
+            <br />
+            <span className="text-lg">Tap to pause</span>
+          </div>
+        ) : (
+          <span className="font-serif text-3xl text-center">{getOrbText()}</span>
+        )}
       </div>
 
       <Drawer.Root
@@ -123,7 +130,9 @@ export default function Orb() {
         <Drawer.Portal>
           <Drawer.Overlay className="fixed inset-0" />
           <Drawer.Content className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-fit outline-none">
-            <div className="bg-secondary px-4 py-2 flex flex-col rounded-md border-1 border-border">
+            <div 
+              className="px-4 py-2 flex flex-col rounded-md backdrop-blur-md bg-[var(--toast-background)] border border-[var(--toast-border)]"
+            >
               <VisuallyHidden>
                 <Drawer.Title>Save Dream</Drawer.Title>
               </VisuallyHidden>
