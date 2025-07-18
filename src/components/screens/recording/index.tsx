@@ -2,12 +2,12 @@
 
 import type { RecordingWithDetails } from "@/types";
 
-import { Link } from "next-view-transitions";
 import Sequence from "./sequence";
 import * as FadeIn from "@/components/ui/fade-in";
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
-import Image from "next/image";
+import { BlurImage } from "@/components/ui/blur-image";
+import Image from "next/image"
 import Nav from "@/components/layout/nav";
 
 function SectionParagraph({ children }: { children: React.ReactNode }) {
@@ -20,10 +20,9 @@ function SectionParagraph({ children }: { children: React.ReactNode }) {
 
 interface Props {
   recording: RecordingWithDetails;
-  imageUrl?: string | null;
 }
 
-export const Recording = ({ recording, imageUrl }: Props) => {
+export const Recording = ({ recording }: Props) => {
   const [isImageExpanded, setIsImageExpanded] = useState(false);
 
   return (
@@ -32,14 +31,14 @@ export const Recording = ({ recording, imageUrl }: Props) => {
         <FadeIn.Item>
           <Nav className="mb-8" />
         </FadeIn.Item>
-        
+
         <FadeIn.Item>
-          <h1 className="text-2xl font-semibold font-mono-accent mt-12 mb-6 break-words">
+          <h1 className="text-2xl font-semibold font-mono-accent mb-6 break-words">
             {recording.name}
           </h1>
         </FadeIn.Item>
 
-        {imageUrl && (
+        {recording.imageUrl && (
           <FadeIn.Item>
             <div className="mb-8">
               <motion.div
@@ -48,8 +47,8 @@ export const Recording = ({ recording, imageUrl }: Props) => {
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                <Image
-                  src={imageUrl!}
+                <BlurImage
+                  src={recording.imageUrl}
                   alt="Dream visualization"
                   fill
                   className="object-cover"
@@ -110,7 +109,7 @@ export const Recording = ({ recording, imageUrl }: Props) => {
 
       {/* Full-screen image overlay */}
       <AnimatePresence>
-        {isImageExpanded && imageUrl && (
+        {isImageExpanded && recording.imageUrl && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
@@ -125,7 +124,7 @@ export const Recording = ({ recording, imageUrl }: Props) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             />
-            
+
             {/* Expanded image */}
             <motion.div
               className="relative max-w-[90vw] max-h-[90vh] rounded-lg overflow-hidden cursor-zoom-out"
@@ -135,7 +134,7 @@ export const Recording = ({ recording, imageUrl }: Props) => {
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
             >
               <Image
-                src={imageUrl!}
+                src={recording.imageUrl}
                 alt="Dream visualization"
                 width={1920}
                 height={1080}
@@ -148,4 +147,4 @@ export const Recording = ({ recording, imageUrl }: Props) => {
       </AnimatePresence>
     </Sequence>
   );
-}; 
+};

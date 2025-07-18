@@ -26,7 +26,7 @@ export const Home = ({ recordings }: Props) => {
   const RecordingsList = () => (
     <div className="pb-32">
       <Nav className="mb-8" />
-      <div className="grid grid-cols-1 min-[580px]:grid-cols-2 gap-y-6 gap-x-4 bg-transparent justify-items-center">
+      <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2">
         {recordings.map((recording) => (
           <Card key={recording.id} recording={recording} />
         ))}

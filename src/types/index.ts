@@ -8,6 +8,7 @@ export type Recording = {
   processing?: boolean;
   raw_transcription?: string;
   audio_storage_path?: string;
+  imageUrl?: string;
 };
 
 export type RecordingWithDetails = {
@@ -17,4 +18,5 @@ export type RecordingWithDetails = {
   raw_transcription?: string;
   emotion_tags?: string[];
   image_storage_path?: string;
+  imageUrl?: string;
 }; 

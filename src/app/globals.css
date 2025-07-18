@@ -1,11 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --color-background: #fefefe;
+  --color-background: #fdfdfc;
   --color-foreground: #08090a;
   --color-inner-blue: #2178b8;
   --toast-background: oklch(88% 0.015 240 / 0.25);
   --toast-border: oklch(92% 0.02 240 / 0.35);
+
+  /* Card colors */
+  --color-card-background: #f3f3f3;
+  --color-card-inner-background: #fbfbfb;
+  --color-card-border: #e6e6e6;
+  --color-card-text: #1b1b18;
 }
 
 @theme inline {
@@ -21,6 +27,12 @@
   --color-border: #f0f0f0;
   --color-accent: #42a5f5;
   --color-secondary: #fafafa;
+
+  /* Card colors */
+  --color-card-background: var(--color-card-background);
+  --color-card-inner-background: var(--color-card-inner-background);
+  --color-card-border: var(--color-card-border);
+  --color-card-text: var(--color-card-text);
 }
 
 body {
@@ -61,7 +73,7 @@ body {
 }
 
 .shimmer-background {
-  --shimmer-custom-color: var(--color-background);
+  --shimmer-custom-color: #939393;
 }
 
 .red-card-bg {
@@ -80,7 +92,8 @@ body {
   @apply w-0 h-0 mx-auto;
   border-left: min(24px, 3.5vw) solid transparent;
   border-right: min(24px, 3.5vw) solid transparent;
-  border-top: min(16px, 2.3vw) solid white;
+  border-top: min(16px, 2.3vw) solid #D4D4D4;
+  opacity: 0.75;
 }
 
 /* Smooth Animations */
@@ -279,24 +292,80 @@ body {
   transition-delay: 0.5s;
 }
 
-/* Light mode */
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-background: #fefefe;
-    --color-foreground: #08090a;
-    --color-inner-blue: #2178b8;
-    --toast-background: oklch(88% 0.015 240 / 0.25);
-    --toast-border: oklch(92% 0.02 240 / 0.35);
-  }
+/* Default light theme */
+:root {
+  --color-background: #fdfdfc;
+  --color-foreground: #08090a;
+  --color-inner-blue: #2178b8;
+  --toast-background: oklch(88% 0.015 240 / 0.25);
+  --toast-border: oklch(92% 0.02 240 / 0.35);
+
+  /* Card colors */
+  --color-card-background: #f3f3f3;
+  --color-card-inner-background: #fbfbfb;
+  --color-card-border: #e6e6e6;
+  --color-card-text: #1b1b18;
 }
 
-/* Dark mode */
-/* @media (prefers-color-scheme: dark) {
-  :root {
+/* Light theme - explicit selection */
+html:has(input[name="theme"][value="light"]:checked) {
+  --color-background: #fdfdfc;
+  --color-foreground: #08090a;
+  --color-inner-blue: #2178b8;
+  --toast-background: oklch(88% 0.015 240 / 0.25);
+  --toast-border: oklch(92% 0.02 240 / 0.35);
+
+  /* Card colors */
+  --color-card-background: #f3f3f3;
+  --color-card-inner-background: #fbfbfb;
+  --color-card-border: #e6e6e6;
+  --color-card-text: #1b1b18;
+}
+
+/* Dark theme - explicit selection */
+html:has(input[name="theme"][value="dark"]:checked) {
+  --color-background: #141414;
+  --color-foreground: #f7f8f8;
+  --color-inner-blue: #2178b8;
+  --toast-background: oklch(28% 0.01 240 / 0.4);
+  --toast-border: oklch(60% 0.01 240 / 0.3);
+
+  /* Card colors */
+  --color-card-background: #2A2A2A;
+  --color-card-inner-background: #1F1F1F;
+  --color-card-border: #3A3A3A;
+  --color-card-text: #E5E5E5;
+}
+
+/* System theme - follows OS preference */
+@media (prefers-color-scheme: dark) {
+  html:has(input[name="theme"][value="system"]:checked) {
     --color-background: #141414;
     --color-foreground: #f7f8f8;
     --color-inner-blue: #2178b8;
     --toast-background: oklch(28% 0.01 240 / 0.4);
     --toast-border: oklch(60% 0.01 240 / 0.3);
+
+    /* Card colors */
+    --color-card-background: #2A2A2A;
+    --color-card-inner-background: #1F1F1F;
+    --color-card-border: #3A3A3A;
+    --color-card-text: #E5E5E5;
   }
-} */
+}
+
+@media (prefers-color-scheme: light) {
+  html:has(input[name="theme"][value="system"]:checked) {
+    --color-background: #fdfdfc;
+    --color-foreground: #08090a;
+    --color-inner-blue: #2178b8;
+    --toast-background: oklch(88% 0.015 240 / 0.25);
+    --toast-border: oklch(92% 0.02 240 / 0.35);
+
+    /* Card colors */
+    --color-card-background: #f3f3f3;
+    --color-card-inner-background: #fbfbfb;
+    --color-card-border: #e6e6e6;
+    --color-card-text: #1b1b18;
+  }
+}
